@@ -91,8 +91,8 @@ def cleanup_cublas(libcublas, handle):
 def matmulXt(libcublas,handle,A,B):
   m,k = A.shape
   k,n = B.shape
-  C_cp = cp.zeros((m, n), dtype=cp.float32)  # CuPy array for result
-  sgemm(libcublas, handle, m, n, k, A_np, B_cp, C_cp, alpha=1.0, beta=0.0)
+  C= cp.zeros((m, n), dtype=cp.float32)  # CuPy array for result
+  sgemm(libcublas, handle, m, n, k, A, B, C, alpha=1.0, beta=0.0)
   return C_cp
 
 # Main execution block (example usage)
@@ -109,16 +109,16 @@ if __name__ == "__main__":
         m, n, k = 1024, 2048, 512
 
         # Example matrices (NumPy and CuPy)
-        A_np = cp.ones((m, k), dtype=cp.float32)  # NumPy array
+        A_cp = cp.ones((m, k), dtype=cp.float32)  # NumPy array
         B_cp = cp.ones((k, n), dtype=cp.float32)  # CuPy array
         # C_cp = cp.zeros((m, n), dtype=cp.float32)  # CuPy array
 
         # Perform SGEMM
-        # sgemm(libcublas, handle, m, n, k, A_np, B_cp, C_cp, alpha=1.0, beta=0.0)
-        C_cp = matmulXt(libcublas,handle,A_np,B_cp)
+        # sgemm(libcublas, handle, m, n, k, A_cp, B_cp, C_cp, alpha=1.0, beta=0.0)
+        C_cp = matmulXt(libcublas,handle,A_cp,B_cp)
         # Verify results (move CuPy result back to NumPy for comparison)
         
-        assert np.allclose(A_np @ B_cp, C_cp), "Result mismatch!"
+        assert np.allclose(A_cp @ B_cp, C_cp), "Result mismatch!"
 
         print("SGEMM operation successful!")
     finally:
