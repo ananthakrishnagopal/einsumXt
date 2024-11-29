@@ -9,7 +9,7 @@ import itertools
 import operator
 import string
 import warnings
-
+from sgemm import *
 import cupy
 from cupy._core import _accelerator
 from cupy import _util
